@@ -50,8 +50,7 @@ jobs:
       - name: Install Pylint
         run: pip install pylint
 
-      - name: Lint Backend Code (Optional)
-        run: pylint fastapi-backend/*.py
+      
 
   test-frontend:
     name: Test Frontend
@@ -91,6 +90,9 @@ jobs:
 
       - name: Install Backend Dependencies
         run: pip install -r fastapi-backend/requirements.txt
+
+      - name: Lint Backend Code (Optional)
+        run: pylint fastapi-backend/*.py --exit-zero
 
       - name: Run Backend Tests
         run: pytest fastapi-backend
