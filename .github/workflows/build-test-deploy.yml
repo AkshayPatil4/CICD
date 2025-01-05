@@ -1,0 +1,105 @@
+name: Build, Test, and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+        working-directory: ./angular-frontend
+
+      - name: Build Frontend
+        run: npm run build
+        working-directory: ./angular-frontend
+
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    needs: build-frontend # This ensures backend build starts only after frontend build is successful
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Backend Dependencies
+        run: pip install -r fastapi-backend/requirements.txt
+
+      - name: Lint Backend Code (Optional)
+        run: pylint fastapi-backend/*.py
+
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    needs: build-frontend
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+        working-directory: ./angular-frontend
+
+      - name: Run Frontend Tests
+        run: npm test -- --watch=false
+        working-directory: ./angular-frontend
+
+  test-backend:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    needs: build-backend
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Backend Dependencies
+        run: pip install -r fastapi-backend/requirements.txt
+
+      - name: Run Backend Tests
+        run: pytest fastapi-backend
+
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: [test-frontend, test-backend]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy Frontend and Backend
+        run: echo "Deploying the frontend and backend applications..."
