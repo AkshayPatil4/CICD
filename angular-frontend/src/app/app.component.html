@@ -1,0 +1,8 @@
+<div style="text-align:center;">
+  <h1>Angular + FastAPI Demo</h1>
+  <button (click)="fetchData()">Fetch Data</button>
+  <div *ngIf="data">
+    <h2>Response from Backend:</h2>
+    <pre>{{ data | json }}</pre>
+  </div>
+</div>
