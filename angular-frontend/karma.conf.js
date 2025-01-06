@@ -30,7 +30,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu'],
+        flags: ['--no-sandbox', '--disable-gpu'], // Required flags for root
       },
     },
     singleRun: true, // Exit after running tests

@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y wget gnupg && \
 
 # Set Chrome binary path for Karma
 ENV CHROME_BIN=/usr/bin/google-chrome
-ENV NODE_OPTIONS=--openssl-legacy-provider
 
 # Copy source files
 COPY . .
