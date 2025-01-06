@@ -1,4 +1,4 @@
-name: Build, Test, and Deploy with Docker
+name: Build, Test, and Deploy with Docker Artifacts
 
 on:
   push:
@@ -36,14 +36,32 @@ jobs:
             -t angular-frontend:latest \
             -f angular-frontend/Dockerfile ./angular-frontend
 
+      - name: Save Frontend Docker Image as Artifact
+        run: |
+          docker save angular-frontend:latest | gzip > angular-frontend.tar.gz
+        shell: bash
+
+      - name: Upload Frontend Image Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: angular-frontend-image
+          path: angular-frontend.tar.gz
+
   test-frontend:
     name: Test Frontend
     runs-on: ubuntu-latest
     needs: build-frontend
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Download Frontend Image Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: angular-frontend-image
+
+      - name: Load Frontend Docker Image
+        run: |
+          gunzip < angular-frontend.tar.gz | docker load
+        shell: bash
 
       - name: Run Frontend Tests
         run: |
@@ -76,14 +94,32 @@ jobs:
             -t fastapi-backend:latest \
             -f fastapi-backend/Dockerfile ./fastapi-backend
 
+      - name: Save Backend Docker Image as Artifact
+        run: |
+          docker save fastapi-backend:latest | gzip > fastapi-backend.tar.gz
+        shell: bash
+
+      - name: Upload Backend Image Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: fastapi-backend-image
+          path: fastapi-backend.tar.gz
+
   test-backend:
     name: Test Backend
     runs-on: ubuntu-latest
     needs: build-backend
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Download Backend Image Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: fastapi-backend-image
+
+      - name: Load Backend Docker Image
+        run: |
+          gunzip < fastapi-backend.tar.gz | docker load
+        shell: bash
 
       - name: Run Backend Tests
         run: |
