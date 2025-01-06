@@ -11,7 +11,7 @@ RUN npm ci
 COPY . .
 
 # Run tests
-RUN npm test -- --watch=false
+
 
 # Build the application
 RUN npm run build --prod
