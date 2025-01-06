@@ -105,7 +105,7 @@ jobs:
 
       - name: Run Frontend Tests
         run: |
-          docker run --rm angular-frontend:latest npm test -- --watch=false
+          docker run --rm angular-frontend:latest npm test -- --watch=false --browsers=ChromeHeadless
   # Backend Test Job
   test-backend:
     name: Test Backend

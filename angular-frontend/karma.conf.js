@@ -26,7 +26,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['jsdom'], // Use jsdom instead of ChromeHeadless
+    browsers: ['jsdom'], // Use jsdom instead of Chrome
     singleRun: true, // Exit after running tests
     restartOnFileChange: false,
   });
