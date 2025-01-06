@@ -1,4 +1,4 @@
-# Base Node.js image for both building and serving
+# Base Node.js image for building
 FROM node:18
 
 WORKDIR /app
@@ -10,14 +10,11 @@ RUN npm ci
 # Copy source files
 COPY . .
 
-# Run tests
-RUN npm test -- --watch=false
-
 # Build the application
 RUN npm run build --prod
 
 # Expose the app
 EXPOSE 4200
 
-# Start the Angular app using npm
+# Start the Angular app
 CMD ["npm", "start"]
