@@ -1,4 +1,3 @@
-# Base Node.js image for building
 FROM node:18
 
 WORKDIR /app
