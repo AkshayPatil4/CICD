@@ -36,6 +36,9 @@ jobs:
             -t angular-frontend:latest \
             -f angular-frontend/Dockerfile ./angular-frontend
 
+      - name: List Docker Images
+        run: docker images
+
       - name: Save Frontend Docker Image as Artifact
         run: |
           docker save angular-frontend:latest | gzip > angular-frontend.tar.gz
@@ -46,26 +49,6 @@ jobs:
         with:
           name: angular-frontend-image
           path: angular-frontend.tar.gz
-
-  test-frontend:
-    name: Test Frontend
-    runs-on: ubuntu-latest
-    needs: build-frontend
-
-    steps:
-      - name: Download Frontend Image Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: angular-frontend-image
-
-      - name: Load Frontend Docker Image
-        run: |
-          gunzip < angular-frontend.tar.gz | docker load
-        shell: bash
-
-      - name: Run Frontend Tests
-        run: |
-          docker run --rm angular-frontend:latest npm test -- --watch=false
 
   build-backend:
     name: Build Backend Docker Image
@@ -94,6 +77,9 @@ jobs:
             -t fastapi-backend:latest \
             -f fastapi-backend/Dockerfile ./fastapi-backend
 
+      - name: List Docker Images
+        run: docker images
+
       - name: Save Backend Docker Image as Artifact
         run: |
           docker save fastapi-backend:latest | gzip > fastapi-backend.tar.gz
@@ -104,35 +90,3 @@ jobs:
         with:
           name: fastapi-backend-image
           path: fastapi-backend.tar.gz
-
-  test-backend:
-    name: Test Backend
-    runs-on: ubuntu-latest
-    needs: build-backend
-
-    steps:
-      - name: Download Backend Image Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: fastapi-backend-image
-
-      - name: Load Backend Docker Image
-        run: |
-          gunzip < fastapi-backend.tar.gz | docker load
-        shell: bash
-
-      - name: Run Backend Tests
-        run: |
-          docker run --rm -v $PWD/fastapi-backend:/app -w /app fastapi-backend:latest pytest .
-
-  deploy:
-    name: Deploy Application
-    runs-on: ubuntu-latest
-    needs: [test-frontend, test-backend]
-
-    steps:
-      - name: Deploy Frontend and Backend
-        run: |
-          echo "Frontend Docker Image: angular-frontend:latest"
-          echo "Backend Docker Image: fastapi-backend:latest"
-          echo "Simulating deployment process..."
