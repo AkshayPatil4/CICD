@@ -101,19 +101,11 @@ jobs:
         run: |
           docker load -i angular-frontend.tar
 
-      - name: Install Chrome for Testing
-        run: |
-          sudo apt-get update && \
-          sudo apt-get install -y wget gnupg && \
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && \
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list && \
-          sudo apt-get update && sudo apt-get install -y google-chrome-stable
+
 
       - name: Run Frontend Tests
         run: |
-          docker run --rm \
-          -e CHROME_BIN=/usr/bin/google-chrome \
-          angular-frontend:latest npm test -- --watch=false
+          docker run --rm angular-frontend:latest npm test -- --watch=false
 
   # Backend Test Job
   test-backend:
