@@ -1,4 +1,4 @@
-# Use Node.js image to build Angular app
+# Build Stage
 FROM node:18 as build-stage
 
 WORKDIR /app
@@ -7,14 +7,16 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copy source files and build the application
+# Copy source files
 COPY . .
+
+# Run tests
+RUN npm test -- --watch=false
+
+# Build the application
 RUN npm run build --prod
 
-# Include npm for testing
-RUN apt-get update && apt-get install -y npm
-
-# Serve Angular app using nginx
+# Production Stage
 FROM nginx:1.23.3-alpine
 COPY --from=build-stage /app/dist/angular-frontend /usr/share/nginx/html
 

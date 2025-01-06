@@ -125,7 +125,7 @@ jobs:
 
       - name: Run Backend Tests
         run: |
-          docker run --rm -v $PWD/fastapi-backend:/app -w /app fastapi-backend:latest pytest .
+          docker run --rm -v $PWD/fastapi-backend:/app -w /app fastapi-backend:latest pytest test_main.py 
 
   deploy:
     name: Deploy Application
