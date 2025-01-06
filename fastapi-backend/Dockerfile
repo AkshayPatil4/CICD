@@ -1,9 +1,14 @@
+# Use Python image
 FROM python:3.9-slim
 
 WORKDIR /app
 
+# Install dependencies
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install pytest for testing
+RUN pip install pytest
 
 COPY . .
 
