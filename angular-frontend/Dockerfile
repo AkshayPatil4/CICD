@@ -1,5 +1,5 @@
-# Build Stage
-FROM node:18 as build-stage
+# Base Node.js image for both building and serving
+FROM node:18
 
 WORKDIR /app
 
@@ -11,14 +11,13 @@ RUN npm ci
 COPY . .
 
 # Run tests
-
+RUN npm test -- --watch=false
 
 # Build the application
 RUN npm run build --prod
 
-# Production Stage
-FROM nginx:1.23.3-alpine
-COPY --from=build-stage /app/dist/angular-frontend /usr/share/nginx/html
+# Expose the app
+EXPOSE 4200
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Angular app using npm
+CMD ["npm", "start"]
