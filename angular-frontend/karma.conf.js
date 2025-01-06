@@ -4,7 +4,7 @@ module.exports = function (config) {
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
-      require('karma-chrome-launcher'),
+      require('karma-jsdom-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma'),
@@ -25,20 +25,8 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: false, // Turn off auto-watching for CI pipelines
-    browsers: ['ChromeHeadlessNoSandbox'], // Use custom launcher for headless Chrome
-    customLaunchers: {
-      ChromeHeadlessNoSandbox: {
-        base: 'ChromeHeadless',
-        flags: [
-          '--no-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-extensions',
-          '--disable-gpu',
-          '--disable-software-rasterizer',
-        ],
-      },
-    },
+    autoWatch: false,
+    browsers: ['jsdom'], // Use jsdom instead of ChromeHeadless
     singleRun: true, // Exit after running tests
     restartOnFileChange: false,
   });
