@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  # Frontend Build Job
+  # Frontend Build Jo
   build-frontend:
     name: Build Frontend Docker Image
     runs-on: ubuntu-latest
